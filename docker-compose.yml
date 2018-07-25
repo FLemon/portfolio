@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  artlab:
+    build: artlab
+    command: nginx -g 'daemon off;'
+    ports:
+      - "80:80"
+    depends_on:
+      - artlab-api
+    environment:
+      - API_HOST=artlab-api
+    volumes:
+      - ./artlab/dist:/usr/share/nginx/html
+
+  artlab-api:
+    build: artlab-api
+    command: npm start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_HOST=mongodb
+    volumes:
+      - ./artlab-api/:/usr/src/
+
+  mongodb:
+    image: mongo:4.0.0
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
