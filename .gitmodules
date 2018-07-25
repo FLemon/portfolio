@@ -1,0 +1,6 @@
+[submodule "artlab-api"]
+	path = artlab-api
+	url = https://github.com/FLemon/artlab-api
+[submodule "artlab"]
+	path = artlab
+	url = https://github.com/FLemon/artlab

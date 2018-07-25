@@ -1,9 +1,2 @@
 # database
-data/*
-
-# artlab
-artlab/node_modules/*
-artlab/dist/*
-
-# artlab-api
-artlab-api/node_modules/*
+data/
