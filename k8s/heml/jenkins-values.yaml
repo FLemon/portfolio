@@ -1,0 +1,86 @@
+Master:
+  Name: jenkins-master
+  Image: "jenkins/jenkins"
+  ImageTag: "lts"
+  ImagePullPolicy: "Always"
+  Component: "jenkins-master"
+  UseSecurity: true
+  AdminUser: admin
+  UsePodSecurityContext: true
+  ServicePort: 8080
+  ServiceType: ClusterIP
+  ServiceAnnotations: {}
+  HostName: jenkins.jijins.us
+  ContainerPort: 8080
+  HealthProbes: true
+  HealthProbesLivenessTimeout: 90
+  HealthProbesReadinessTimeout: 60
+  HealthProbeLivenessFailureThreshold: 12
+  SlaveListenerPort: 50000
+  DisabledAgentProtocols:
+    - JNLP-connect
+    - JNLP2-connect
+  CSRF:
+    DefaultCrumbIssuer:
+      Enabled: true
+      ProxyCompatability: true
+  CLI: false
+  SlaveListenerServiceType: ClusterIP
+  SlaveListenerServiceAnnotations: {}
+  LoadBalancerSourceRanges:
+  - 0.0.0.0/0
+  InstallPlugins:
+    - kubernetes:1.1
+    - workflow-aggregator:2.5
+    - workflow-job:2.15
+    - credentials-binding:1.13
+    - git:3.6.4
+    - github:1.29.2
+    - blueocean:1.7.1
+  InitScripts:
+  CustomConfigMap: false
+  NodeSelector: {}
+  Tolerations: {}
+  PodAnnotations: {}
+  Ingress:
+    ApiVersion: extensions/v1beta1
+    Annotations:
+      kubernetes.io/ingress.class: nginx
+    TLS:
+  Cpu: '50m'
+  Memory: '100Mi'
+
+Agent:
+  Enabled: true
+  Image: jenkins/jnlp-slave
+  ImageTag: 3.19-1-alpine
+  Component: "jenkins-slave"
+  Privileged: false
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  AlwaysPullImage: false
+  volumes:
+  NodeSelector: {}
+
+Persistence:
+  Enabled: true
+  Annotations: {}
+  AccessMode: ReadWriteOnce
+  Size: 8Gi
+  volumes:
+  mounts:
+
+NetworkPolicy:
+  Enabled: false
+  ApiVersion: extensions/v1beta1
+
+rbac:
+  install: true
+  serviceAccountName: default
+  apiVersion: v1beta1
+  roleRef: cluster-admin

@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o k8s/
+    kompose.version: 1.12.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: artlab-api
+  name: artlab-api
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: artlab-api
+    spec:
+      containers:
+      - args:
+        - npm
+        - start
+        env:
+        - name: MONGO_HOST
+          value: mongodb
+        image: artlab-api
+        name: artlab-api
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "0.1"
+            memory: "100Mi"
+          limits:
+            cpu: "0.3"
+            memory: "500Mi"
+      restartPolicy: Always
+status: {}
